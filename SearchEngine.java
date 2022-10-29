@@ -1,30 +1,48 @@
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 
 class Handler implements URLHandler {
     // The one bit of state on the server: a number that will be manipulated by
     // various requests.
+    ArrayList<String> groceries = new ArrayList<String>();
     int num = 0;
-    String s; 
-    String x;
+
     public String handleRequest(URI url) {
+        if (url.getPath().equals("/")) {
+            return String.format("List: %s", groceries);
+        } else if (url.getPath().equals("/search")) {
+            String[] parameters1 = url.getQuery().split("=");
+            if(parameters1[0].equals("s")){
+                for(int i = 0; i<groceries.size(); i++){
+                    if(groceries.get(i).contains(parameters1[1])){
+                        return String.format("Result: %s", groceries.get(i));
+                    }
+                    else{
+                        return String.format("Not found");
+                    }
+                }
+                }
+            
+            //num += 1;
+            //return String.format("Searched");
+        } else {
             System.out.println("Path: " + url.getPath());
             if (url.getPath().contains("/add")) {
-                String[] parameters = url.getQuery().split("=");
-                if (parameters[0].equals("s") && parameters[1].equals("x")) {
-                    return String.format("item: %s", parameters[0], s );
-                    //return String.format("All item: %s", parameters[0], s);
+                String[] parameters2 = url.getQuery().split("=");
+                if (parameters2[0].equals("s")) {
+                    groceries.add(parameters2[1]);
+                    return String.format("%s has been added", parameters2[1]);
+        
                 }
             }
-           else{ 
-            return "404 Not Found!";
-           }
-           return "Hi";
+//            return "404 Not Found!";
         }
+        return "404 Not Found!";
     }
 
 
-class NumberServer {
+public class SearchEngine {
     public static void main(String[] args) throws IOException {
         if(args.length == 0){
             System.out.println("Missing port number! Try any number between 1024 to 49151");
@@ -35,4 +53,5 @@ class NumberServer {
 
         Server.start(port, new Handler());
     }
+}
 }
