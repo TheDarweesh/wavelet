@@ -30,7 +30,9 @@ class Handler implements URLHandler {
             System.out.println("Path: " + url.getPath());
             if (url.getPath().contains("/add")) {
                 String[] parameters2 = url.getQuery().split("=");
+                //arraylist contains for loop 
                 if (parameters2[0].equals("s")) {
+                    
                     groceries.add(parameters2[1]);
                     return String.format("%s has been added", parameters2[1]);
         
