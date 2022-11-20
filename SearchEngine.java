@@ -6,6 +6,7 @@ class Handler implements URLHandler {
     // The one bit of state on the server: a number that will be manipulated by
     // various requests.
     ArrayList<String> groceries = new ArrayList<String>();
+    
     int num = 0;
 
     public String handleRequest(URI url) {
@@ -13,9 +14,10 @@ class Handler implements URLHandler {
             return String.format("List: %s", groceries);
         } else if (url.getPath().equals("/search")) {
             String[] parameters1 = url.getQuery().split("=");
-            if(parameters1[0].equals("s")){
+            if(parameters1[0].equals("a")){
                 for(int i = 0; i<groceries.size(); i++){
                     if(groceries.get(i).contains(parameters1[1])){
+                        
                         return String.format("Result: %s", groceries.get(i));
                     }
                     else{
@@ -42,7 +44,6 @@ class Handler implements URLHandler {
         }
         return "404 Not Found!";
     }
-
 
 public class SearchEngine {
     public static void main(String[] args) throws IOException {
