@@ -5,45 +5,27 @@ import java.util.ArrayList;
 class Handler implements URLHandler {
     // The one bit of state on the server: a number that will be manipulated by
     // various requests.
-    ArrayList<String> groceries = new ArrayList<String>();
-    
     int num = 0;
 
     public String handleRequest(URI url) {
         if (url.getPath().equals("/")) {
-            return String.format("List: %s", groceries);
-        } else if (url.getPath().equals("/search")) {
-            String[] parameters1 = url.getQuery().split("=");
-            if(parameters1[0].equals("a")){
-                for(int i = 0; i<groceries.size(); i++){
-                    if(groceries.get(i).contains(parameters1[1])){
-                        
-                        return String.format("Result: %s", groceries.get(i));
-                    }
-                    else{
-                        return String.format("Not found");
-                    }
-                }
-                }
-            
-            //num += 1;
-            //return String.format("Searched");
+            return String.format("Number: %d", num);
+        } else if (url.getPath().equals("/increment")) {
+            num += 1;
+            return String.format("Number incremented!");
         } else {
             System.out.println("Path: " + url.getPath());
             if (url.getPath().contains("/add")) {
-                String[] parameters2 = url.getQuery().split("=");
-                //arraylist contains for loop 
-                if (parameters2[0].equals("s")) {
-                    
-                    groceries.add(parameters2[1]);
-                    return String.format("%s has been added", parameters2[1]);
-        
+                String[] parameters = url.getQuery().split("=");
+                if (parameters[0].equals("count")) {
+                    num += Integer.parseInt(parameters[1]);
+                    return String.format("Number increased by %s! It's now %d", parameters[1], num);
                 }
             }
-//            return "404 Not Found!";
+            return "404 Not Found!";
         }
-        return "404 Not Found!";
     }
+}
 
 public class SearchEngine {
     public static void main(String[] args) throws IOException {
@@ -56,5 +38,4 @@ public class SearchEngine {
 
         Server.start(port, new Handler());
     }
-}
 }
