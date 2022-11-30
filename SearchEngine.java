@@ -8,18 +8,34 @@ class Handler implements URLHandler {
     int num = 0;
 
     public String handleRequest(URI url) {
+        ArrayList<String> groceries = new ArrayList<String>();
+        
         if (url.getPath().equals("/")) {
-            return String.format("Number: %d", num);
-        } else if (url.getPath().equals("/increment")) {
-            num += 1;
-            return String.format("Number incremented!");
-        } else {
+            return String.format("Groceries: %s", groceries);
+        } 
+        else if (url.getPath().equals("/search")) {
+            String[] parameters = url.getQuery().split("=");
+            if (parameters[0].equals("s")) {
+            ArrayList<String> results = new ArrayList<String>();
+            for(int i = 0; i < groceries.size(); i++){
+                if(groceries.get(i).contains(parameters[1])){
+                    results.add(groceries.get(i));
+                    i++;
+                }
+                return String.format("Results: %s", results);
+            }
+            //return String.format("Not found");
+        } 
+        return String.format("Not found");
+    }
+        else {
             System.out.println("Path: " + url.getPath());
             if (url.getPath().contains("/add")) {
                 String[] parameters = url.getQuery().split("=");
-                if (parameters[0].equals("count")) {
-                    num += Integer.parseInt(parameters[1]);
-                    return String.format("Number increased by %s! It's now %d", parameters[1], num);
+                if (parameters[0].equals("s")) {
+                    groceries.add(parameters[1]);
+                    //return String.format("%s has been added.", parameters[1]);
+                    return groceries.toString();
                 }
             }
             return "404 Not Found!";
